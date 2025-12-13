@@ -10,7 +10,9 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 app.get("/", (req, res) => {
   res.status(200).send("TON Mriya server is running ✅");
 });
-
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 // Telegram webhook endpoint
 app.post("/webhook", async (req, res) => {
   try {
