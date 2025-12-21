@@ -17,8 +17,43 @@ app.get("/health", (req, res) => {
 app.post("/webhook", async (req, res) => {
   try {
     const update = req.body;
+// ⭐ Telegram Stars — підтвердження платежу
+if (update.pre_checkout_query) {
+  const query = update.pre_checkout_query;
 
-    // Якщо це повідомлення
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerPreCheckoutQuery`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      pre_checkout_query_id: query.id,
+      ok: true
+    })
+  });
+
+  return res.send("ok");
+}
+ // ✅ Успішний платіж Stars
+if (update.message?.successful_payment) {
+  const payment = update.message.successful_payment;
+  const chatId = update.message.chat.id;
+
+  const payload = payment.invoice_payload; 
+  // Наприклад: "vip_30_days" або "boost_x10"
+
+  console.log("Payment success:", payload);
+
+  await sendMessage(
+    chatId,
+    `✅ Платіж успішний!\nОтримано: ${payload}`
+  );
+
+  // 👉 ТУТ ПІЗНІШЕ:
+  // - видати VIP
+  // - нарахувати буст
+  // - записати в БД
+
+  return res.send("ok");
+}   // Якщо це повідомлення
     const msg = update.message;
     if (msg?.text) {
       const chatId = msg.chat.id;
