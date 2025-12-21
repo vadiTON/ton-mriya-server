@@ -1,0 +1,12 @@
+version: "1"
+
+services:
+  - type: web
+    name: ton-mriya-server
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: BOT_TOKEN
+        value: 7653875555:AAEFk0sq4HyGHKWImAJAsXfYCjgRXdNQesg
